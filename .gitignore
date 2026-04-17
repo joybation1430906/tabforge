@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+.next/
+build/
+.cache/
+coverage/
+.parcel-cache/
+npm-debug.log*
