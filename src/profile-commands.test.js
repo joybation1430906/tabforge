@@ -20,6 +20,22 @@ describe('cmdProfileList', () => {
   });
 });
 
+describe('cmdProfileShow', () => {
+  test('prints profile data', () => {
+    const data = { tabs: ['https://example.com'] };
+    jest.spyOn(profile, 'loadProfile').mockReturnValue(data);
+    cmdProfileShow('work');
+    expect(console.log).toHaveBeenCalledWith(JSON.stringify(data, null, 2));
+  });
+
+  test('exits if no name provided', () => {
+    const exit = jest.spyOn(process, 'exit').mockImplementation(() => { throw new Error('exit'); });
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() => cmdProfileShow()).toThrow('exit');
+    expect(exit).toHaveBeenCalledWith(1);
+  });
+});
+
 describe('cmdProfileDelete', () => {
   test('calls deleteProfile and logs success', () => {
     const del = jest.spyOn(profile, 'deleteProfile').mockImplementation(() => {});
