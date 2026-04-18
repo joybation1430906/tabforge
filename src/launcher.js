@@ -31,6 +31,11 @@ function openTab(url, browser = 'default') {
     if (!url || typeof url !== 'string') {
       return reject(new Error('Invalid URL: must be a non-empty string'));
     }
+    try {
+      new URL(url);
+    } catch {
+      return reject(new Error(`Invalid URL format: "${url}"`));
+    }
     const cmd = `${getBrowserCommand(browser)} "${url}"`;
     exec(cmd, (error) => {
       if (error) {
