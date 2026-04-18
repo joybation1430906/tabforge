@@ -44,15 +44,37 @@ function cmdBookmarkList(args) {
   });
 }
 
+function cmdBookmarkSearch(args) {
+  const [query] = args;
+  if (!query) {
+    console.error('Usage: tabforge bookmark search <query>');
+    process.exit(1);
+  }
+  const bookmarks = loadBookmarks();
+  const lower = query.toLowerCase();
+  const results = bookmarks.filter(b =>
+    b.name.toLowerCase().includes(lower) || b.url.toLowerCase().includes(lower)
+  );
+  if (!results.length) {
+    console.log(`No bookmarks matching '${query}'`);
+    return;
+  }
+  results.forEach(b => {
+    const tags = b.tags.length ? ` [${b.tags.join(', ')}]` : '';
+    console.log(`  ${b.name}: ${b.url}${tags}`);
+  });
+}
+
 function handleBookmarkCommand(sub, args) {
   switch (sub) {
     case 'add': return cmdBookmarkAdd(args);
     case 'remove': return cmdBookmarkRemove(args);
     case 'list': return cmdBookmarkList(args);
+    case 'search': return cmdBookmarkSearch(args);
     default:
       console.error(`Unknown bookmark subcommand: ${sub}`);
       process.exit(1);
   }
 }
 
-module.exports = { cmdBookmarkAdd, cmdBookmarkRemove, cmdBookmarkList, handleBookmarkCommand };
+module.exports = { cmdBookmarkAdd, cmdBookmarkRemove, cmdBookmarkList, cmdBookmarkSearch, handleBookmarkCommand };
