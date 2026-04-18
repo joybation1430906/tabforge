@@ -28,6 +28,9 @@ function getBrowserCommand(browser) {
 
 function openTab(url, browser = 'default') {
   return new Promise((resolve, reject) => {
+    if (!url || typeof url !== 'string') {
+      return reject(new Error('Invalid URL: must be a non-empty string'));
+    }
     const cmd = `${getBrowserCommand(browser)} "${url}"`;
     exec(cmd, (error) => {
       if (error) {
