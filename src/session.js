@@ -28,7 +28,11 @@ function loadSession(name) {
     throw new Error(`Session "${name}" not found.`);
   }
   const raw = fs.readFileSync(sessionFile, 'utf8');
-  return JSON.parse(raw);
+  try {
+    return JSON.parse(raw);
+  } catch (e) {
+    throw new Error(`Session "${name}" is corrupted and could not be parsed.`);
+  }
 }
 
 function listSessions() {
