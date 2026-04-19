@@ -53,9 +53,22 @@ test('getSchedule returns correct entry', () => {
   expect(s.cron).toBe('0 9 * * 1-5');
 });
 
+test('getSchedule throws if not found', () => {
+  const { getSchedule } = getModule();
+  expect(() => getSchedule('ghost')).toThrow("Schedule 'ghost' not found");
+});
+
 test('toggleSchedule disables a schedule', () => {
   const { addSchedule, toggleSchedule, getSchedule } = getModule();
   addSchedule('morning', 'work', '0 9 * * 1-5');
   toggleSchedule('morning', false);
   expect(getSchedule('morning').enabled).toBe(false);
+});
+
+test('toggleSchedule re-enables a schedule', () => {
+  const { addSchedule, toggleSchedule, getSchedule } = getModule();
+  addSchedule('morning', 'work', '0 9 * * 1-5');
+  toggleSchedule('morning', false);
+  toggleSchedule('morning', true);
+  expect(getSchedule('morning').enabled).toBe(true);
 });
