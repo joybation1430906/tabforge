@@ -36,6 +36,11 @@ test('removeTag removes a tag from a session', () => {
   expect(result).toContain('daily');
 });
 
+test('removeTag on session with no tags returns empty array', () => {
+  const result = removeTag('nonexistent', 'sometag');
+  expect(result).toEqual([]);
+});
+
 test('getTagsForSession returns empty array for unknown session', () => {
   expect(getTagsForSession('nonexistent')).toEqual([]);
 });
@@ -48,6 +53,11 @@ test('findSessionsByTag returns sessions with that tag', () => {
   expect(result).toContain('work');
   expect(result).toContain('personal');
   expect(result).not.toContain('music');
+});
+
+test('findSessionsByTag returns empty array for unknown tag', () => {
+  const result = findSessionsByTag('nonexistent-tag');
+  expect(result).toEqual([]);
 });
 
 test('clearTagsForSession removes all tags for session', () => {
