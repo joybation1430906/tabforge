@@ -41,6 +41,11 @@ function cmdPinSearch(args) {
   results.forEach(p => console.log(`  ${p.name}: ${p.url}`));
 }
 
+function cmdPinCount() {
+  const pins = loadPins();
+  console.log(`Total pins: ${pins.length}`);
+}
+
 function handlePinCommand(sub, args) {
   switch (sub) {
     case 'add': return cmdPinAdd(args);
@@ -48,8 +53,9 @@ function handlePinCommand(sub, args) {
     case 'list': return cmdPinList();
     case 'show': return cmdPinShow(args);
     case 'search': return cmdPinSearch(args);
+    case 'count': return cmdPinCount();
     default: console.error(`Unknown pin command: ${sub}`); process.exit(1);
   }
 }
 
-module.exports = { cmdPinAdd, cmdPinRemove, cmdPinList, cmdPinShow, cmdPinSearch, handlePinCommand };
+module.exports = { cmdPinAdd, cmdPinRemove, cmdPinList, cmdPinShow, cmdPinSearch, cmdPinCount, handlePinCommand };
