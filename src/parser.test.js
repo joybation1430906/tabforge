@@ -50,6 +50,18 @@ describe('validateConfig', () => {
     const result = validateConfig({ ...validConfig, browser: 'firefox' });
     expect(result.browser).toBe('firefox');
   });
+
+  test('throws if session is not a string', () => {
+    expect(() =>
+      validateConfig({ session: 42, tabs: [{ url: 'https://a.com' }] })
+    ).toThrow('session');
+  });
+
+  test('throws if tabs is not an array', () => {
+    expect(() =>
+      validateConfig({ session: 'test', tabs: { url: 'https://a.com' } })
+    ).toThrow('tabs');
+  });
 });
 
 describe('parseSessionConfig', () => {
@@ -64,5 +76,12 @@ describe('parseSessionConfig', () => {
 
   test('throws if file does not exist', () => {
     expect(() => parseSessionConfig('/nonexistent/path.yml')).toThrow('not found');
+  });
+
+  test('throws if YAML is malformed', () => {
+    const tmp = path.join(os.tmpdir(), 'tabforge-bad.yml');
+    fs.writeFileSync(tmp, 'session: [unclosed', 'utf8');
+    expect(() => parseSessionConfig(tmp)).toThrow();
+    fs.unlinkSync(tmp);
   });
 });
