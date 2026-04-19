@@ -26,10 +26,18 @@ test('addSnippet throws on duplicate name', () => {
   expect(() => addSnippet('dup', ['https://other.com'])).toThrow("Snippet 'dup' already exists");
 });
 
+test('addSnippet throws on empty urls', () => {
+  expect(() => addSnippet('empty', [])).toThrow();
+});
+
 test('listSnippets returns all snippets', () => {
   addSnippet('a', ['https://a.com']);
   addSnippet('b', ['https://b.com']);
   expect(listSnippets()).toHaveLength(2);
+});
+
+test('listSnippets returns empty array when no snippets exist', () => {
+  expect(listSnippets()).toEqual([]);
 });
 
 test('getSnippet returns correct snippet', () => {
