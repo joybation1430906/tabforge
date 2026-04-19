@@ -50,4 +50,19 @@ function deleteSession(name) {
   fs.unlinkSync(sessionFile);
 }
 
-module.exports = { saveSession, loadSession, listSessions, deleteSession, SESSION_DIR };
+function renameSession(oldName, newName) {
+  const oldFile = path.join(SESSION_DIR, `${oldName}.json`);
+  const newFile = path.join(SESSION_DIR, `${newName}.json`);
+  if (!fs.existsSync(oldFile)) {
+    throw new Error(`Session "${oldName}" not found.`);
+  }
+  if (fs.existsSync(newFile)) {
+    throw new Error(`A session named "${newName}" already exists.`);
+  }
+  const data = loadSession(oldName);
+  data.name = newName;
+  fs.writeFileSync(newFile, JSON.stringify(data, null, 2));
+  fs.unlinkSync(oldFile);
+}
+
+module.exports = { saveSession, loadSession, listSessions, deleteSession, renameSession, SESSION_DIR };
