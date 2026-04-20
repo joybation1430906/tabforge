@@ -42,10 +42,22 @@ test('listThemes returns names without extension', () => {
   expect(mod.listThemes()).toEqual(['dark', 'light']);
 });
 
+test('listThemes ignores non-json files', () => {
+  fs.readdirSync.mockReturnValue(['dark.json', 'readme.txt', 'light.json']);
+  expect(mod.listThemes()).toEqual(['dark', 'light']);
+});
+
 test('deleteTheme removes file and returns true', () => {
   const result = mod.deleteTheme('dark');
   expect(fs.unlinkSync).toHaveBeenCalled();
   expect(result).toBe(true);
+});
+
+test('deleteTheme returns false if file does not exist', () => {
+  fs.existsSync.mockReturnValue(false);
+  const result = mod.deleteTheme('ghost');
+  expect(fs.unlinkSync).not.toHaveBeenCalled();
+  expect(result).toBe(false);
 });
 
 test('applyTheme merges theme into session', () => {
